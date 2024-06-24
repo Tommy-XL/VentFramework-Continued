@@ -56,4 +56,21 @@ public class UndefinedOption: GameOption
     {
         
     }
+
+    public static UndefinedOption From(GameOption option)
+    {
+        UndefinedOption undefinedOption = new UndefinedOption() {
+            name = option.name,
+            Key = option.Key,
+            Description = option.Description,
+            IOSettings = option.IOSettings,
+            Values = option.Values,
+            DefaultIndex = option.DefaultIndex,
+            ValueType = option.ValueType,
+            Attributes = option.Attributes,
+        };
+        option.EventHandlers.ForEach(undefinedOption.RegisterEventHandler);
+        option.Children.ForEach(undefinedOption.Children.Add);
+        return undefinedOption;
+    }
 }

@@ -22,13 +22,15 @@ public interface IGameOptionTab
     
     StringOption InitializeOption(StringOption sourceOption);
 
-    void Setup(RolesSettingsMenu initialized);
+    void Setup(RolesSettingsMenu menu);
 
     void SetPosition(Vector2 position);
 
     void Show();
     
     void Hide();
+
+    bool Ignore();
 
     /// <summary>
     /// Filters, or possibly renders options before being sent to the main renderer.

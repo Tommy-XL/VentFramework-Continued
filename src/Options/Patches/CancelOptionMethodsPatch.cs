@@ -18,8 +18,8 @@ public static class CheckForSetHeaderPatch
 {
     public static void Prefix(CategoryHeaderMasked __instance, StringNames name, int maskLayer)
     {
-        // IGNORE Role stuff so that doesnt appear invis
-        if (name != StringNames.RoleSettingsLabel && name != StringNames.RoleChanceAndQuantity && name != StringNames.RoleQuotaLabel) OptionExtensions.categoryHeaders.Add(__instance);
+        // Role Headers are a different class so this should filter them out
+        if (__instance.GetType() == typeof(CategoryHeaderMasked)) OptionExtensions.categoryHeaders.Add(__instance);
     }
 }
 

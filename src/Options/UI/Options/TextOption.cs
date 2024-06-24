@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UI;
 using VentLib.Options.Enum;
 using VentLib.Options.Events;
@@ -72,14 +73,42 @@ public class TextOption: GameOption
     internal void BindPlusMinusButtons()
     {
         Behaviour.IfPresent(b => {
-            PassiveButton plusButton = b.transform.FindChild("PlusButton").GetComponent<PassiveButton>();
-            PassiveButton minusButton = b.transform.FindChild("MinusButton").GetComponent<PassiveButton>();
+            PassiveButton plusButton = b.transform.FindChild("PlusButton (1)").GetComponent<PassiveButton>();
+            PassiveButton minusButton = b.transform.FindChild("MinusButton (1)").GetComponent<PassiveButton>();
 
             plusButton.OnClick = new Button.ButtonClickedEvent();
+            plusButton.OnMouseOut = new Button.ButtonClickedEvent();
+            plusButton.OnMouseOver = new Button.ButtonClickedEvent();
             plusButton.OnClick.AddListener((Action)Increment);
+            SpriteRenderer plusActiveSprite = plusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            plusButton.OnMouseOut.AddListener((Action)(() => plusActiveSprite.color = Color.white));
+            plusButton.OnMouseOver.AddListener((Action)(() => plusActiveSprite.color = Color.cyan));
 
             minusButton.OnClick = new Button.ButtonClickedEvent();
+            minusButton.OnMouseOut = new Button.ButtonClickedEvent();
+            minusButton.OnMouseOver = new Button.ButtonClickedEvent();
             minusButton.OnClick.AddListener((Action)Decrement);
+            SpriteRenderer minusActiveSprite = minusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            minusButton.OnMouseOut.AddListener((Action)(() => minusActiveSprite.color = Color.white));
+            minusButton.OnMouseOver.AddListener((Action)(() => minusActiveSprite.color = Color.cyan));
         });
+    }
+
+    public static TextOption From(GameOption option)
+    {
+        TextOption textOption = new TextOption() {
+            name = option.name,
+            Key = option.Key,
+            Description = option.Description,
+            IOSettings = option.IOSettings,
+            OptionType = OptionType.String,
+            Values = option.Values,
+            DefaultIndex = option.DefaultIndex,
+            ValueType = option.ValueType,
+            Attributes = option.Attributes,
+        };
+        option.EventHandlers.ForEach(textOption.RegisterEventHandler);
+        option.Children.ForEach(textOption.Children.Add);
+        return textOption;
     }
 }

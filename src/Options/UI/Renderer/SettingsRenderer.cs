@@ -80,8 +80,6 @@ public class SettingsRenderer: IGameOptionRenderer
     public void PostRender(GameOptionsMenu menu)
     {
         if (!SettingsOptionController.ModSettingsOpened) return;
-        menu.MapPicker.gameObject.SetActive(false);
-        menu.scrollBar.GetComponentsInChildren<UiElement>().ForEach(ui => menu.ControllerSelectable.Add(ui));
 		menu.scrollBar.SetYBoundsMax(-Height - 1.65f);
     }
 

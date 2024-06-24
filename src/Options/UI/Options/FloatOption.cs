@@ -95,4 +95,21 @@ public class FloatOption: GameOption
             minusButton.OnMouseOver.AddListener((Action)(() => minusActiveSprite.color = Color.cyan));
         });
     }
+
+    public static FloatOption From(GameOption option)
+    {
+        FloatOption floatOption = new FloatOption() {
+            name = option.name,
+            Key = option.Key,
+            Description = option.Description,
+            IOSettings = option.IOSettings,
+            Values = option.Values,
+            DefaultIndex = option.DefaultIndex,
+            ValueType = option.ValueType,
+            Attributes = option.Attributes,
+        };
+        option.EventHandlers.ForEach(floatOption.RegisterEventHandler);
+        option.Children.ForEach(floatOption.Children.Add);
+        return floatOption;
+    }
 }

@@ -19,10 +19,8 @@ public class GameOptionTab : IGameOptionTab
     private Func<Sprite> spriteSupplier;
 
     private UnityOptional<Sprite> sprite = UnityOptional<Sprite>.Null();
-    private UnityOptional<GameObject> tabButton = UnityOptional<GameObject>.Null();
-    
-    private UnityOptional<GameObject> relatedMenu = UnityOptional<GameObject>.Null();
-    private UnityOptional<GameOptionsMenu> innerMenu = UnityOptional<GameOptionsMenu>.Null();
+    protected UnityOptional<RoleSettingsTabButton> TabButton = UnityOptional<RoleSettingsTabButton>.Null();
+    protected UnityOptional<RolesSettingsMenu> RelatedMenu = UnityOptional<RolesSettingsMenu>.Null();
 
     private OrderedSet<Action<IGameOptionTab>> callbacks = new();
 
@@ -49,52 +47,63 @@ public class GameOptionTab : IGameOptionTab
 
     public virtual StringOption InitializeOption(StringOption sourceBehavior)
     {
-        if (!innerMenu.Exists()) throw new ArgumentException("Cannot Initialize Behaviour because menu does not exist");
-        return Object.Instantiate(sourceBehavior, innerMenu.Get().transform);
+        if (!RelatedMenu.Exists()) throw new ArgumentException("Cannot Initialize Behaviour because menu does not exist");
+        return Object.Instantiate(sourceBehavior, RelatedMenu.Get().AdvancedRolesSettings.transform);
     }
 
     public virtual void Setup(RolesSettingsMenu menu)
     {
-        
+        TabButton.OrElseSet(() => {
+            var button = UnityEngine.Object.Instantiate<RoleSettingsTabButton>(menu.roleSettingsTabButtonOrigin, Vector3.zero, Quaternion.identity, menu.tabParent);
+            button.icon.sprite = spriteSupplier();
+            menu.roleTabs.Add(button.Button);
+            return button;
+        });
     }
+
+    public virtual bool Ignore() => false;
 
     public void SetPosition(Vector2 position)
     {
-        tabButton.IfPresent(btn => btn.transform.localPosition = position);
+        TabButton.IfPresent(btn => btn.transform.localPosition = new Vector3(position.x, position.y, -2f));
     }
 
     public List<GameOption> PreRender() => Options.SelectMany(opt => opt.GetDisplayedMembers()).ToList();
 
-    public Optional<Vector3> GetPosition() => tabButton.Map(btn => btn.transform.localPosition);
+    public Optional<Vector3> GetPosition() => TabButton.Map(btn => btn.transform.localPosition);
     
     public List<GameOption> GetOptions() => Options;
 
     public void Activate()
     {
         log.Info($"Activated Tab \"{name}\"", "TabSwitch");
-        GetTabHighlight().IfPresent(highlight => highlight.enabled = true);
-        relatedMenu.IfPresent(menu => menu.SetActive(true));
+        // GetTabHighlight().IfPresent(highlight => highlight.enabled = true);
+        RelatedMenu.IfPresent(menu => {
+            
+        });
     }
 
     public void Deactivate()
     {
         log.Debug($"Deactivated Tab \"{name}\"", "TabSwitch");
-        GetTabHighlight().IfPresent(highlight => highlight.enabled = false);
-        relatedMenu.IfPresent(menu => menu.SetActive(false));
+        // GetTabHighlight().IfPresent(highlight => highlight.enabled = false);
+        RelatedMenu.IfPresent(menu => {
+
+        });
     }
 
     public void Show()
     {
-        tabButton.IfPresent(button => button.SetActive(true));
+        TabButton.IfPresent(button => button.gameObject.SetActive(true));
     }
 
     public void Hide()
     {
-        tabButton.IfPresent(button => button.SetActive(false));
+        TabButton.IfPresent(button => button.gameObject.SetActive(false));
     }
 
 
-    private UnityOptional<SpriteRenderer> GetTabRenderer() => tabButton.UnityMap(button => button.transform.FindChild("Hat Button").FindChild("Icon").GetComponent<SpriteRenderer>());
+    private UnityOptional<SpriteRenderer> GetTabBackground() => TabButton.UnityMap(button => button.background);
     
-    private UnityOptional<SpriteRenderer> GetTabHighlight() => tabButton.UnityMap(button => button.transform.FindChild("Hat Button").FindChild("Tab Background").GetComponent<SpriteRenderer>());
+    private UnityOptional<PassiveButton> GetPassiveButton() => TabButton.UnityMap(button => button.Button);
 }

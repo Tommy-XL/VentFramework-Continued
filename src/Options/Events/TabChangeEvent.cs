@@ -4,9 +4,9 @@ namespace VentLib.Options.Events;
 
 public class TabChangeEvent : TabEvent
 {
-    public readonly IGameOptionTab Original;
+    public readonly IGameOptionTab? Original;
     
-    public TabChangeEvent(IGameOptionTab oldTab, IGameOptionTab newTab) : base(newTab)
+    public TabChangeEvent(IGameOptionTab? oldTab, IGameOptionTab? newTab) : base(newTab)
     {
         Original = oldTab;
     }

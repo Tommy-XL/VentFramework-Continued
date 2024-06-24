@@ -60,6 +60,25 @@ public class BoolOption: GameOption
             SpriteRenderer activeSprite = button.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
             button.OnMouseOut.AddListener((Action)(() => activeSprite.color = Color.white));
             button.OnMouseOver.AddListener((Action)(() => activeSprite.color = Color.cyan));
+            Value.Map(v => v.Value).IfPresent(v => b.CheckMark.enabled = (bool)v);
         });
+    }
+
+    public static BoolOption From(GameOption option)
+    {
+        BoolOption boolOption = new BoolOption() {
+            name = option.name,
+            Key = option.Key,
+            Description = option.Description,
+            IOSettings = option.IOSettings,
+            OptionType = OptionType.Bool,
+            Values = option.Values,
+            DefaultIndex = option.DefaultIndex,
+            ValueType = option.ValueType,
+            Attributes = option.Attributes,
+        };
+        option.EventHandlers.ForEach(boolOption.RegisterEventHandler);
+        option.Children.ForEach(boolOption.Children.Add);
+        return boolOption;
     }
 }

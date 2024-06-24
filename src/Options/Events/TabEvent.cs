@@ -4,12 +4,12 @@ namespace VentLib.Options.Events;
 
 public class TabEvent : ITabEvent
 {
-    private readonly IGameOptionTab source;
+    private readonly IGameOptionTab? source;
     
-    public TabEvent(IGameOptionTab tab)
+    public TabEvent(IGameOptionTab? tab)
     {
         source = tab;
     }
 
-    public IGameOptionTab Source() => source;
+    public IGameOptionTab? Source() => source;
 }

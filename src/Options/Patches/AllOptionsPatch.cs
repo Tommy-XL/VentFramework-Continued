@@ -5,8 +5,8 @@ using VentLib.Logging;
 using VentLib.Utilities.Extensions;
 using VentLib.Options.Extensions;
 using Rewired.Utils;
-using VentLib.Options.UI.Controllers;
 using VentLib.Options.UI;
+using VentLib.Options.UI.Controllers;
 
 namespace VentLib.Options.Patches;
 
@@ -24,6 +24,23 @@ public static class GameSettingsStartPatch
         SettingsOptionController.Start(__instance);
     }
 }
+
+[HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.SetQuotaTab))]
+public static class RoleSettingsStartPatch
+{
+    public static bool Prefix(RolesSettingsMenu __instance)
+    {
+        if (RoleOptionController.Enabled) RoleOptionController.HandleOpen(__instance);
+        return !RoleOptionController.Enabled;
+    }
+}
+
+[HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.OpenChancesTab))]
+public static class OpenChancesTabPatch
+{
+    public static void Prefix(RolesSettingsMenu __instance) => RoleOptionController.OpenChancesTab();
+}
+
 
 [HarmonyPriority(Priority.Low)]
 [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Update))]
@@ -54,12 +71,13 @@ public static class GameOptionsMenuStartPatch
     public static float? InnerslothHeight = null;
     public static void Postfix(GameOptionsMenu __instance)
     {
-        log.Info($"(Initialize) Mod Settings Opened: {SettingsOptionController.ModSettingsOpened}");
+        log.Debug($"(Initialize) Mod Settings Opened: {SettingsOptionController.ModSettingsOpened}");
         if (!SettingsOptionController.ModSettingsOpened) 
         {
             if (InnerslothHeight != null) {
                 __instance.scrollBar.SetYBoundsMax((byte)InnerslothHeight);
             }
+            __instance.scrollBar.ScrollToTop();
             return;
         }
         if (InnerslothHeight == null) {
@@ -80,7 +98,8 @@ public static class GameOptionsMenuStartPatch
         }
         __instance.MapPicker.gameObject.SetActive(false);
         __instance.scrollBar.GetComponentsInChildren<UiElement>().ForEach(ui => __instance.ControllerSelectable.Add(ui));
-		__instance.scrollBar.SetYBoundsMax(-SettingsOptionController.OptionRenderer.GetHeight() - 1.65f);
+        __instance.scrollBar.ScrollToTop();
+		// __instance.scrollBar.SetYBoundsMax(-SettingsOptionController.OptionRenderer.GetHeight() - 1.65f);
     }
 }
 

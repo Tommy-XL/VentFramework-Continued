@@ -4,7 +4,7 @@ namespace VentLib.Options.Interfaces;
 
 public interface IRoleOptionRender
 {
-    void RenderTabs(IGameOptionTab[] tabs);
+    void RenderTabs(IGameOptionTab[] tabs, RolesSettingsMenu menu);
 
     void PreRender(GameOption option, RenderOptions renderOptions, RolesSettingsMenu menu);
 

@@ -1,22 +1,19 @@
+using TMPro;
 using System;
 using System.Linq;
 using UnityEngine;
 using VentLib.Logging;
+using VentLib.Utilities;
 using AmongUs.GameOptions;
 using VentLib.Options.Enum;
-using VentLib.Options.Events;
-using VentLib.Options.Interfaces;
-using VentLib.Options.Patches;
 using VentLib.Options.UI.Tabs;
-using VentLib.Options.UI.Renderer;
-using VentLib.Utilities.Attributes;
-using VentLib.Utilities.Collections;
-using VentLib.Utilities.Extensions;
-using VentLib.Utilities.Optionals;
-using VentLib.Utilities;
-using TMPro;
+using VentLib.Options.Interfaces;
 using VentLib.Options.Extensions;
 using VentLib.Options.UI.Options;
+using VentLib.Options.UI.Renderer;
+using VentLib.Utilities.Optionals;
+using VentLib.Utilities.Attributes;
+using VentLib.Utilities.Extensions;
 
 namespace VentLib.Options.UI.Controllers;
 
@@ -24,7 +21,7 @@ namespace VentLib.Options.UI.Controllers;
 public static class SettingsOptionController
 {
     private static readonly StandardLogger log = LoggerFactory.GetLogger<StandardLogger>(typeof(SettingsOptionController));
-    public static IGameOptionRenderer OptionRenderer = new SettingsRenderer();
+    private static IGameOptionRenderer OptionRenderer = new SettingsRenderer();
     public static RenderOptions RenderOptions { get; set; } = new();
     private static MainSettingTab _mainSettingsTab;
     internal static bool ModSettingsOpened;
@@ -39,11 +36,16 @@ public static class SettingsOptionController
 
     public static void SetMainTab(MainSettingTab tab) => _mainSettingsTab = tab;
 
+    public static void SetRenderer(IGameOptionRenderer iRenderer)
+    {
+        OptionRenderer = iRenderer;
+    }
+
     internal static void Start(GameSettingMenu menu)
     {
         ModSettingsOpened = false;
         if (!Enabled) return;
-        log.Trace("GameOptionController.Start ahahaha");
+        log.Debug("GameOptionController.Start ahahaha");
 
         var gamesettings = menu.GameSettingsButton;
         var rolesettings = menu.RoleSettingsButton;
@@ -100,7 +102,7 @@ public static class SettingsOptionController
     {
         if (ModSettingsOpened) return;
         ModSettingsOpened = true;
-        log.Info("Mod Settings was opened.", "settings test");
+        log.Debug("Mod Settings was opened.", "settings test");
         if (menu.GameSettingsButton.gameObject.transform.Find("Selected").gameObject.active) {
             menu.GameSettingsButton.gameObject.transform.Find("Inactive").gameObject.SetActive(true);
             menu.GameSettingsButton.gameObject.transform.Find("Selected").gameObject.SetActive(false);
@@ -139,8 +141,8 @@ public static class SettingsOptionController
                     break;
             }
         });
-        _mainSettingsTab.PreRender().ForEach((option, index) => RenderCheck(option, index, menu));
         OptionRenderer.SetHeight(_mainSettingsTab.StartHeight());
+        _mainSettingsTab.PreRender().ForEach((option, index) => RenderCheck(option, index, menu));
         OptionRenderer.PostRender(menu);
     }
 
@@ -224,7 +226,7 @@ public static class SettingsOptionController
                 break;
             default:
                 UndefinedOption undefinedOption = (option as UndefinedOption);
-                CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity);
+                CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.name = "ModdedCategory";
 			    categoryHeaderMasked.SetHeader(undefinedOption.Name(), 20);
 			    categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
