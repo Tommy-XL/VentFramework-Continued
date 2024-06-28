@@ -39,7 +39,7 @@ public sealed class EngineerTab: VanillaTab
         button.Button.OnClick.AddListener((Action)HandleClick);
     }
 
-    public override List<GameOption> PreRender()
+    public override List<GameOption> PreRender(int? targetLevel = null)
     {
         return new List<GameOption>();
     }

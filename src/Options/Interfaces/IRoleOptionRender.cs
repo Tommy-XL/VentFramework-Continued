@@ -1,4 +1,5 @@
 using VentLib.Options.UI;
+using VentLib.Options.UI.Options;
 
 namespace VentLib.Options.Interfaces;
 
@@ -15,6 +16,8 @@ public interface IRoleOptionRender
     void SetHeight(float height);
 
     float GetHeight();
+
+    float GetOptionCount();
 
     void Close();
 }

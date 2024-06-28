@@ -26,6 +26,7 @@ public class BoolOption: GameOption
                     (child as FloatOption).HideMembers();
                     break;
                 case OptionType.Player:
+                    (child as UndefinedOption).HideMembers();
                     break;
                 default:
                     (child as UndefinedOption).HideMembers();

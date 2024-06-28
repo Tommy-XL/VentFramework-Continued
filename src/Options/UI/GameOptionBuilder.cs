@@ -40,7 +40,7 @@ public class GameOptionBuilder : IOptionBuilder<GameOptionBuilder>
 
     public GameOptionBuilder LocaleName(string qualifier)
     {
-        Option.name = Localizer.Get(Assembly.GetCallingAssembly()).Translate(qualifier, translationCreationOption: TranslationCreationOption.CreateIfNull);
+        Option.name = Localizer.Get(Assembly.GetCallingAssembly()).Translate(qualifier, translationCreationOption: TranslationCreationOption.ErrorIfNull);
         Option.Key ??= qualifier;
         return this;
     }
@@ -116,8 +116,20 @@ public class GameOptionBuilder : IOptionBuilder<GameOptionBuilder>
     }
 
     /// <summary>
+    /// Classifies this option as a Role Option. Do not bother setting this if it is not Level 1 of an IGameOptionTab.
+    /// </summary>
+    /// <returns></returns>
+    public GameOptionBuilder SetAsRoleOption()
+    {
+        // if (!Option.OptionType.CanOverride()) return this;
+        Option = RoleOption.From(Option);
+        Option.OptionType = Enum.OptionType.Role;
+        return this;
+    }
+
+    /// <summary>
     /// Replaces the default + and - with a Checkmark instead. This is not compatible with any other options however.
-    /// This will reset the Option's values. Any other methods that set  values will make the option switch from a Checkmark.
+    /// This will reset the Option's values. Any other methods that change the values will make the game error when clicking the Chckmark.
     /// </summary>
     /// <param name="defaultValue">Whether or not the checkmarked should be checked by default.</param>
     /// <returns></returns>

@@ -76,7 +76,7 @@ public abstract class VanillaTab: IGameOptionTab
         TabButton.IfPresent(button => button.gameObject.SetActive(false));
     }
 
-    public abstract List<GameOption> PreRender();
+    public abstract List<GameOption> PreRender(int? targetLevel = null);
 
     public Optional<Vector3> GetPosition() => TabButton.Map(btn => btn.transform.localPosition);
 

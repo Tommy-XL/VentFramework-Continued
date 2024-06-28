@@ -34,7 +34,7 @@ public static class RoleOptionController
     public static RenderOptions RenderOptions { get; set; } = new();
     private static readonly OrderedSet<GameOptionTab> Tabs = new();
     private static IGameOptionTab? _currentTab;
-    internal static bool Enabled = true;
+    internal static bool Enabled;
     static RoleOptionController()
     {
         BuiltinGameTabs.ForEach(tb => tb.AddEventListener(tb2 => CurrentTab = tb2));
@@ -114,7 +114,12 @@ public static class RoleOptionController
         // menu.AllButton.OnClick.AddListener((Action)(() => CurrentTab = null));
     }
 
-    internal static void OpenChancesTab() => CurrentTab = null;
+    internal static void OpenChancesTab(RolesSettingsMenu menu)
+    {
+        if (!Enabled) return;
+        CurrentTab = null;
+        menu.scrollBar.CalculateAndSetYBounds(_renderer.GetOptionCount(), 1f, 6f, 0.43f);
+    }
 
     internal static void Refresh()
     {
@@ -123,6 +128,8 @@ public static class RoleOptionController
             log.Warn("Unable to Refresh Option Controller", "OptionController");
             return;
         }
+        // GameObject.FindGameObjectsWithTag("Modded").ForEach(child => child.Destroy());
+        _lastInitialized.Get().RoleChancesSettings.transform.DestroyChildren();
         AllTabs().ForEach(tab => tab.Setup(_lastInitialized.Get()));
         _renderer.RenderTabs(AllTabs(), _lastInitialized.Get());
     }
@@ -130,7 +137,7 @@ public static class RoleOptionController
     internal static void DoRender(RolesSettingsMenu menu)
     {
         if (!Enabled) return;
-        if (_currentTab == null) {
+        if (CurrentTab == null) {
             // All tab detection.
             return;
         }

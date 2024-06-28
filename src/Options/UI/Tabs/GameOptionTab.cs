@@ -68,7 +68,7 @@ public class GameOptionTab : IGameOptionTab
         TabButton.IfPresent(btn => btn.transform.localPosition = new Vector3(position.x, position.y, -2f));
     }
 
-    public List<GameOption> PreRender() => Options.SelectMany(opt => opt.GetDisplayedMembers()).ToList();
+    public List<GameOption> PreRender(int? targetLevel = null) => targetLevel != null ? Options.SelectMany(opt => opt.GetDisplayedMembers()).Where(opt => opt.Level == targetLevel).ToList() : Options.SelectMany(opt => opt.GetDisplayedMembers()).ToList();
 
     public Optional<Vector3> GetPosition() => TabButton.Map(btn => btn.transform.localPosition);
     

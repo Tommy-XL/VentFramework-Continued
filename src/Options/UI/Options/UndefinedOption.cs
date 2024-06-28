@@ -34,6 +34,7 @@ public class UndefinedOption: GameOption
                     (child as FloatOption).HideMembers();
                     break;
                 case OptionType.Player:
+                    (child as UndefinedOption).HideMembers();
                     break;
                 default:
                     (child as UndefinedOption).HideMembers();

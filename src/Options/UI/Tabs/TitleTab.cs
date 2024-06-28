@@ -96,7 +96,7 @@ public class TitleTab: IGameOptionTab
         TabButton.IfPresent(button => button.gameObject.SetActive(false));
     }
 
-    public virtual List<GameOption> PreRender() => GetOptions();
+    public virtual List<GameOption> PreRender(int? targetLevel = null) => GetOptions();
 
     public Optional<Vector3> GetPosition() => TabButton.Map(btn => btn.transform.localPosition);
 

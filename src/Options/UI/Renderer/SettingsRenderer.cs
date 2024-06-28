@@ -43,6 +43,7 @@ public class SettingsRenderer: IGameOptionRenderer
             Behaviour.transform.FindChild("Toggle").localPosition += new Vector3(0.3f, 0f, 0f);
         }
         Behaviour.transform.FindChild("Title Text").transform.localPosition -= new Vector3(0.15f, 0f, 0f);
+        Behaviour.transform.Find("LabelBackground").localPosition += new Vector3(1.75f + (0.4f * (option.Level - 1)), option.Level == 1 ? 0.005f : 0, 0f);
     }
 
     
@@ -65,11 +66,14 @@ public class SettingsRenderer: IGameOptionRenderer
         if (lvl > 0)
         {
             render.color = Colors[Mathf.Clamp((lvl - 1) % 3, 0, 2)];
-            render.size = new Vector2((float)(4.8f - (lvl - 1) * 0.2), 0.45f); // was -0.95
             Behaviour.transform.Find("Title Text").transform.localPosition = new Vector3(-0.885f + 0.23f * Mathf.Clamp(lvl - 1, 0, int.MaxValue), 0f);
             //transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(3.4f, 0.37f);
             render.transform.localPosition = new Vector3(0.1f + 0.11f * (lvl - 1), 0f);
         }
+        float lvlCalculation = (0.2f * lvl);
+        render.size = new Vector2(7f - lvlCalculation, 0.55f);
+        // Behaviour.transform.FindChild("Title Text").transform.localPosition = new Vector3(-1.08f + lvlCalculation, 0f);
+        // Behaviour.transform.FindChild("Title Text").GetComponent<RectTransform>().sizeDelta = new Vector2(5.1f - lvlCalculation, 0.28f);
 
         transform.localPosition = new Vector3(0.952f, Height, -2f);   
         transform.parent = menu.settingsContainer;

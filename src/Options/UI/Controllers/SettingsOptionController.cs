@@ -56,7 +56,7 @@ public static class SettingsOptionController
         button.OnClick.RemoveAllListeners();
         button.OnMouseOut.RemoveAllListeners();
         button.OnMouseOver.RemoveAllListeners();
-        button.OnClick.AddListener((Action)(() => OpenModSettings(menu, button))); // add system settigns method
+        button.OnClick.AddListener((Action)(() => OpenModSettings(menu, button)));
         button.OnMouseOut.AddListener((Action)(() => {
             if (ModSettingsOpened) return;
             button.SelectButton(false);
@@ -91,7 +91,7 @@ public static class SettingsOptionController
         }));
         gameSettingsButton.OnMouseOut.RemoveAllListeners();
         gameSettingsButton.OnMouseOut.AddListener((Action)(() => {
-            if (ModSettingsOpened) gameSettingsButton.SelectButton(false); else if (menu.GameSettingsTab.gameObject.active) {} else gameSettingsButton.SelectButton(false);
+            if (ModSettingsOpened) gameSettingsButton.SelectButton(false); else if (!menu.GameSettingsTab.gameObject.active) gameSettingsButton.SelectButton(false);
         }));
         var label = button.transform.Find("FontPlacer/Text_TMP").GetComponent<TextMeshPro>();
         Async.Schedule(() => { label.text = _mainSettingsTab.buttonText; }, 0.05f);

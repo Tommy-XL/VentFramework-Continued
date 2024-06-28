@@ -37,7 +37,7 @@ public interface IGameOptionTab
     /// Main renderer will then only render options returned by this function.
     /// </summary>
     /// <returns></returns>
-    List<GameOption> PreRender();
+    List<GameOption> PreRender(int? targetLevel = null);
 
     Optional<Vector3> GetPosition();
 

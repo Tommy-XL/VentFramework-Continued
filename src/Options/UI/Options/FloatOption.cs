@@ -29,6 +29,7 @@ public class FloatOption: GameOption
                     (child as FloatOption).HideMembers();
                     break;
                 case OptionType.Player:
+                    (child as UndefinedOption).HideMembers();
                     break;
                 default:
                     (child as UndefinedOption).HideMembers();
@@ -63,7 +64,7 @@ public class FloatOption: GameOption
             b.ValueText.text = GetValueText();
         });
         Behaviour.IfNotPresent(() => {
-            SetValue(EnforceIndexConstraint(Index.OrElse(DefaultIndex) + 1, true), false);
+            SetValue(EnforceIndexConstraint(Index.OrElse(DefaultIndex) - 1, true), false);
         });
         
         object newValue = GetValue();

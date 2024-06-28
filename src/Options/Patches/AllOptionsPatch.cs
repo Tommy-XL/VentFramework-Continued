@@ -38,7 +38,7 @@ public static class RoleSettingsStartPatch
 [HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.OpenChancesTab))]
 public static class OpenChancesTabPatch
 {
-    public static void Prefix(RolesSettingsMenu __instance) => RoleOptionController.OpenChancesTab();
+    public static void Prefix(RolesSettingsMenu __instance) => RoleOptionController.OpenChancesTab(__instance);
 }
 
 
