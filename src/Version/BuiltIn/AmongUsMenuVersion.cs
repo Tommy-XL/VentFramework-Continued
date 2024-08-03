@@ -1,10 +1,11 @@
 using Hazel;
 
-namespace VentLib.Version;
-
+namespace VentLib.Version.BuiltIn;
 
 /// <summary>
-/// Version Representing AUM
+/// Version Representing AmongUsMenu
+/// <br></br>
+/// Do note that it seems like AmongUsMenu has been discontinued. So this will just be a relic of the past when the next few updates break it.
 /// </summary>
 public class AmongUsMenuVersion: Version
 {

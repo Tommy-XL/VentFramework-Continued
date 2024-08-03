@@ -1,6 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using VentLib.Utilities.Extensions;
+using VentLib.Options.UI.Options;
+using System.Collections.Generic;
+using VentLib.Options.Enum;
+using System.Linq;
 
 namespace VentLib.Options.UI.Tabs;
 
@@ -31,4 +33,29 @@ public class MainSettingTab
     public virtual float StartHeight() => 2.21f; // Vanilla AU starts around 0.8 i think. 2.21 is like the very top of the options.
     
     public List<GameOption> GetOptions() => Options;
+
+    public virtual void Activate()
+    {
+        
+    }
+    public virtual void Deactivate()
+    {
+        GetOptions().ForEach(child => {
+            switch (child.OptionType) {
+                case OptionType.String:
+                    (child as TextOption)!.HideMembers();
+                    break;
+                case OptionType.Bool:
+                    (child as BoolOption)!.HideMembers();
+                    break;
+                case OptionType.Int:
+                case OptionType.Float:
+                    (child as FloatOption)!.HideMembers();
+                    break;
+                default:
+                    (child as UndefinedOption)!.HideMembers();
+                    break;
+            }
+        });
+    }
 }

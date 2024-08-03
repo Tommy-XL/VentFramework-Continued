@@ -5,6 +5,7 @@ using VentLib.Networking;
 using VentLib.Networking.Interfaces;
 using VentLib.Utilities;
 using VentLib.Version.Assembly;
+using VentLib.Version.BuiltIn;
 using VentLib.Version.Git;
 
 namespace VentLib.Version;

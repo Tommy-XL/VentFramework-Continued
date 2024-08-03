@@ -1,7 +1,11 @@
 using Hazel;
 
-namespace VentLib.Version;
+namespace VentLib.Version.BuiltIn;
 
+/// <summary>
+/// Version Representing no Version.
+/// Essentially just a vanilla client.
+/// </summary>
 public sealed class NoVersion: Version
 {
     public override Version Read(MessageReader reader)

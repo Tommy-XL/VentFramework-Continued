@@ -1,3 +1,6 @@
+using System;
+using Hazel;
+
 namespace VentLib.Networking.RPC.Interfaces;
 
 public interface IChainRpc: IStrongRpc

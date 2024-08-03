@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VentLib.Networking.Handshake;
 using VentLib.Utilities;
+using VentLib.Version.BuiltIn;
 
 namespace VentLib.Version;
 

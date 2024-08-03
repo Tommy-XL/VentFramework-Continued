@@ -18,7 +18,7 @@ public sealed class NoisemakerTab: VanillaTab
         Instance = this;
     }
 
-    public override StringOption InitializeOption(StringOption sourceBehavior)
+    public override OptionBehaviour InitializeOption(OptionBehaviour sourceBehavior)
     {
         if (!innerMenu.Exists()) throw new ArgumentException("Cannot Initialize Behaviour because menu does not exist");
         return UnityEngine.Object.Instantiate(sourceBehavior, innerMenu.Get().transform);

@@ -16,20 +16,20 @@ public class BoolOption: GameOption
         Children.ForEach(child => {
             switch (child.OptionType) {
                 case OptionType.String:
-                    (child as TextOption).HideMembers();
+                    (child as TextOption)!.HideMembers();
                     break;
                 case OptionType.Bool:
-                    (child as BoolOption).HideMembers();
+                    (child as BoolOption)!.HideMembers();
                     break;
                 case OptionType.Int:
                 case OptionType.Float:
-                    (child as FloatOption).HideMembers();
+                    (child as FloatOption)!.HideMembers();
                     break;
                 case OptionType.Player:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
                 default:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
             }
         });
@@ -55,8 +55,8 @@ public class BoolOption: GameOption
         Behaviour.IfPresent(b => {
             PassiveButton button = b.gameObject.transform.FindChild("Toggle").GetComponent<PassiveButton>();
             button.OnClick = new Button.ButtonClickedEvent();
-            button.OnMouseOut = new Button.ButtonClickedEvent();
-            button.OnMouseOver = new Button.ButtonClickedEvent();
+            button.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            button.OnMouseOver = new UnityEngine.Events.UnityEvent();
             button.OnClick.AddListener((Action)Increment);
             SpriteRenderer activeSprite = button.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
             button.OnMouseOut.AddListener((Action)(() => activeSprite.color = Color.white));

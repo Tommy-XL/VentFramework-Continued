@@ -20,7 +20,9 @@ public interface IGameOptionTab
 
     protected void HandleClick();
     
-    StringOption InitializeOption(StringOption sourceOption);
+    OptionBehaviour InitializeOption(OptionBehaviour sourceOption);
+
+    Transform OptionParent();
 
     void Setup(RolesSettingsMenu menu);
 
@@ -31,6 +33,8 @@ public interface IGameOptionTab
     void Hide();
 
     bool Ignore();
+
+    Optional<Color[]> HeaderColors();
 
     /// <summary>
     /// Filters, or possibly renders options before being sent to the main renderer.

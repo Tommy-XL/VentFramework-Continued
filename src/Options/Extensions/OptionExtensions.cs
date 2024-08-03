@@ -47,27 +47,64 @@ public static class OptionExtensions
 		category.countLabel.color = c.Length > 4  ? c[4] : c[3];
     }
 
+    public static void SetText(this RoleOptionSetting roleOption, string header, Color color, int maskLayer = 20)
+    {
+        roleOption.labelSprite.color = color;
+        roleOption.titleText.text = header;
+        SpriteRenderer[] componentsInChildren = roleOption.GetComponentsInChildren<SpriteRenderer>(true);
+		for (int i = 0; i < componentsInChildren.Length; i++)
+		{
+		    componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, maskLayer);
+		}
+		foreach (TextMeshPro textMeshPro in roleOption.GetComponentsInChildren<TextMeshPro>(true))
+		{
+		    textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+		    textMeshPro.fontMaterial.SetFloat("_Stencil", (float)maskLayer);
+		}
+    }
+
     public static OptionBehaviour GetBehaviour(this GameOption option)
     {
         switch (option.OptionType) 
         {
             case OptionType.String:
-                return (option as TextOption).Behaviour.Get();
+                return (option as TextOption)!.Behaviour.Get();
             case OptionType.Bool:
-                return (option as BoolOption).Behaviour.Get();
+                return (option as BoolOption)!.Behaviour.Get();
             case OptionType.Int:
             case OptionType.Float:
-                return (option as FloatOption).Behaviour.Get();
+                return (option as FloatOption)!.Behaviour.Get();
             case OptionType.Player:
-                return (option as UndefinedOption).Behaviour.Get();
+                return (option as UndefinedOption)!.Behaviour.Get();
             // default:
             //     return (option as UndefinedOption).Behaviour.Get();
         }
-        return null;
+        return null!;
     }
     public static T? GetBehaviour<T>(this GameOption option) where T : GameOption
     {
         return option.GetBehaviour() as T;
+    }
+
+    public static bool BehaviourExists(this GameOption option)
+    {
+        switch (option.OptionType) 
+        {
+            case OptionType.String:
+                return (option as TextOption)!.Behaviour.Exists();
+            case OptionType.Bool:
+                return (option as BoolOption)!.Behaviour.Exists();
+            case OptionType.Int:
+            case OptionType.Float:
+                return (option as FloatOption)!.Behaviour.Exists();
+            case OptionType.Player:
+                return (option as UndefinedOption)!.Behaviour.Exists();
+            case OptionType.Role:
+                if ((option as RoleOption)!.SettingsHolder.Exists()) return UnityEngine.Object.IsNativeObjectAlive((option as RoleOption)!.SettingsHolder.Get().MainObject); else return false;
+            default:
+                return (option as UndefinedOption)!.Header.Exists();
+        }
+        // return false;
     }
 
     public static bool CanOverride(this OptionType type)

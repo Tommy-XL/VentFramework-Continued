@@ -5,13 +5,13 @@ using VentLib.Utilities;
 
 namespace VentLib.Logging.Default;
 
-public class DefaultLogger: StandardLogger
+public class DefaultLogger : StandardLogger
 {
     internal static DefaultLogger BaseLogger = new();
     private static readonly object?[] NoArgs = Array.Empty<object>();
-    
+
     public Type? DeclaringType { get; protected set; }
-    
+
     public Delimiter Delimiter { get; set; }
     public readonly List<ILogAppender> Appenders;
     public readonly List<ILogAccumulator> Accumulators;
@@ -23,7 +23,7 @@ public class DefaultLogger: StandardLogger
         Appenders = new List<ILogAppender>();
         Accumulators = new List<ILogAccumulator>();
     }
-    
+
     protected DefaultLogger(Type declaringType, List<ILogAccumulator> accumulators, List<ILogAppender> appenders, Delimiter delimiter)
     {
         this.DeclaringType = declaringType;
@@ -31,7 +31,7 @@ public class DefaultLogger: StandardLogger
         Appenders = appenders;
         Delimiter = delimiter;
     }
-    
+
     public void Log(LogLevel level, string message, LogArguments arguments)
     {
         LogComposite composite = new LogCompositeStd(level, message, Delimiter);
@@ -99,9 +99,9 @@ public class DefaultLogger: StandardLogger
 
     public virtual void Exception(Exception exception)
     {
-        Log(LogLevel.Error, exception.Message, LogArguments.Wrap(this, NoArgs, exception: exception));
+        Log(LogLevel.Error, exception.Message + "\nStack:\n" + (exception.StackTrace ?? "No Stack Trace Found"), LogArguments.Wrap(this, NoArgs, exception: exception));
     }
-    
+
     public virtual void Fatal(string message, params object?[] args)
     {
         Log(LogLevel.Fatal, message, LogArguments.Wrap(this, args));

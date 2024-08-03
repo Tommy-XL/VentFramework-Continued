@@ -11,7 +11,11 @@ public class NetworkRules
     // TODO: make configurable
     public const int AbsoluteMaxPacketSize = 1024;
     public const int AbsoluteMinPacketSize = 256;
+
+    // MENU RPCS
     internal const int AmongUsMenuCallId = 42069 & 255;
+    internal const int SickoMenuCallId = 420 & 255;
+    internal const int PrivateMessageCallId = 101 & 255;
     
     
     public static int MaxPacketSize

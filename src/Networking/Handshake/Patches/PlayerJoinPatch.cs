@@ -4,6 +4,7 @@ using InnerNet;
 using VentLib.Networking.RPC;
 using VentLib.Utilities;
 using VentLib.Version;
+using VentLib.Version.BuiltIn;
 
 namespace VentLib.Networking.Handshake.Patches;
 

@@ -9,6 +9,7 @@ using VentLib.Lobbies.Patches;
 using VentLib.Logging;
 using VentLib.Utilities;
 using VentLib.Version;
+using VentLib.Version.BuiltIn;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace VentLib.Lobbies;

@@ -99,7 +99,7 @@ internal class CallerInfoLogger: DefaultLogger
     {
         MethodBase? callerMethod = Mirror.GetCaller();
         Assembly callingAssembly = Assembly.GetCallingAssembly();
-        Log(LogLevel.Error, exception.Message, LogArguments.Wrap(this, NoArgs, callingAssembly, callerMethod, exception));
+        Log(LogLevel.Error, exception.Message + "\nStack:\n" + (exception.StackTrace ?? "No Stack Trace Found"), LogArguments.Wrap(this, NoArgs, callingAssembly, callerMethod, exception));
     }
     
     public override void Fatal(string message, params object?[] args)

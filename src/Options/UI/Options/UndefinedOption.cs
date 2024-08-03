@@ -24,20 +24,20 @@ public class UndefinedOption: GameOption
         Children.ForEach(child => {
             switch (child.OptionType) {
                 case OptionType.String:
-                    (child as TextOption).HideMembers();
+                    (child as TextOption)!.HideMembers();
                     break;
                 case OptionType.Bool:
-                    (child as BoolOption).HideMembers();
+                    (child as BoolOption)!.HideMembers();
                     break;
                 case OptionType.Int:
                 case OptionType.Float:
-                    (child as FloatOption).HideMembers();
+                    (child as FloatOption)!.HideMembers();
                     break;
                 case OptionType.Player:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
                 default:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
             }
         });

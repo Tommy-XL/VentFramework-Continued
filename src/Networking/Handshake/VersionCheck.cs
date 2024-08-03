@@ -6,6 +6,7 @@ using VentLib.Networking.RPC.Attributes;
 using VentLib.Utilities;
 using VentLib.Networking.Handshake.Patches;
 using VentLib.Version;
+using VentLib.Version.BuiltIn;
 
 namespace VentLib.Networking.Handshake;
 

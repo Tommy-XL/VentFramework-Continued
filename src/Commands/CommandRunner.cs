@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using VentLib.Commands.Attributes;
+using VentLib.Logging.Default;
 using VentLib.Utilities.Extensions;
 
 namespace VentLib.Commands;
@@ -35,26 +36,31 @@ public class CommandRunner
         matches?.ForEach(m => ExecuteLowestCommands(m, context));
     }
     
-    private bool ExecuteLowestCommands(Command source, CommandContext context)
+    private bool ExecuteLowestCommands(Command source, CommandContext context, int subCommandIndex = 1)
     {
+        // NoDepLogger.Debug($"{context.Source.name} is executing /{context.OriginalMessage}");        
         if (source.Flags.HasFlag(CommandFlag.HostOnly) && !context.Source.IsHost()) return false;
         if (source.Flags.HasFlag(CommandFlag.ModdedOnly) && !context.Source.IsModded()) return false;
         if (source.Flags.HasFlag(CommandFlag.LobbyOnly) && LobbyBehaviour.Instance == null) return false;
         if (source.Flags.HasFlag(CommandFlag.InGameOnly) && LobbyBehaviour.Instance != null) return false;
+        // NoDepLogger.Debug($"c1 - alias null check");
 
         if (context.Alias == null) return false;
-        HashSet<string> aliases = source.Aliases.ToHashSet();
+        // NoDepLogger.Debug($"c2 - case senseitive check");
+        List<string> aliases = source.Aliases.ToList();
         string alias = context.Alias;
         if (!source.Flags.HasFlag(CommandFlag.CaseSensitive))
         {
-            aliases = aliases.Select(s => s.ToLowerInvariant()).ToHashSet();
-            alias = alias.ToLowerInvariant();
+            aliases = aliases.Select(s => s.ToLower()).ToList();
+            alias = alias.ToLower();
         }
 
         if (!aliases.Contains(alias)) return false;
+        // NoDepLogger.Debug($"c3 - subcommands check");
         
-        bool higherExecution = source.SubCommands.Any(sc => ExecuteLowestCommands(sc, context.Subcommand()));
+        bool higherExecution = source.SubCommands.Any(sc => ExecuteLowestCommands(sc, context.Subcommand(subCommandIndex), subCommandIndex + 1));
         if (higherExecution) return false;
+        // NoDepLogger.Debug($"c4 - executing main command");
 
         source.Execute(context);
         return true;

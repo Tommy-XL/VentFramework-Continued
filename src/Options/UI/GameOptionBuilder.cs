@@ -40,7 +40,7 @@ public class GameOptionBuilder : IOptionBuilder<GameOptionBuilder>
 
     public GameOptionBuilder LocaleName(string qualifier)
     {
-        Option.name = Localizer.Get(Assembly.GetCallingAssembly()).Translate(qualifier, translationCreationOption: TranslationCreationOption.ErrorIfNull);
+        Option.name = Localizer.Get(Assembly.GetCallingAssembly()).Translate(qualifier, translationCreationOption: TranslationCreationOption.SaveIfNull);
         Option.Key ??= qualifier;
         return this;
     }
@@ -116,14 +116,29 @@ public class GameOptionBuilder : IOptionBuilder<GameOptionBuilder>
     }
 
     /// <summary>
+    /// Replaces the default Phantom role image with your own custom Image.
+    /// </summary>
+    /// <param name="roleImageSupplier">Function to return the Role Image Sprite.</param>
+    /// <returns></returns>
+    public GameOptionBuilder RoleImage(Func<Sprite> roleImageSupplier)
+    {
+        if (Option.OptionType != Enum.OptionType.Role) throw new NotSupportedException($"{Option.OptionType} is not supported to use RoleImage(Func<Sprite> roleImageSupplier). It must be a RoleOption.");
+        (Option as RoleOption)!.roleImageSupplier = roleImageSupplier;
+        return this;
+    }
+
+    /// <summary>
     /// Classifies this option as a Role Option. Do not bother setting this if it is not Level 1 of an IGameOptionTab.
     /// </summary>
     /// <returns></returns>
-    public GameOptionBuilder SetAsRoleOption()
+    public GameOptionBuilder SetAsRoleOption(Action<int> roleChanceConsumer, int start, int stop, int step = 1, int defaultIndex = 0, string suffix = "")
     {
-        // if (!Option.OptionType.CanOverride()) return this;
+        if (!Option.OptionType.CanOverride()) return this;
+        this.ClearValues();
         Option = RoleOption.From(Option);
         Option.OptionType = Enum.OptionType.Role;
+        this.Value(0);
+        this.SubOption(sub => sub.Name("Percentage").Key("Percentage").AddIntRange(start, stop, step, defaultIndex, suffix).BindInt(roleChanceConsumer).Build());
         return this;
     }
 
@@ -137,9 +152,9 @@ public class GameOptionBuilder : IOptionBuilder<GameOptionBuilder>
     {
         if (!Option.OptionType.CanOverride()) return this;
         Option = BoolOption.From(Option);
-        this.ClearValues();
+        // this.ClearValues();
         Option.OptionType = Enum.OptionType.Bool;
-        return this.Values(defaultValue ? 1 : 0, false, true);
+        return this.Value(val => val.Value(defaultValue).Build()).Value(val => val.Value(!defaultValue).Build());
     }
 
     public GameOptionBuilder AddFloatRange(float start, float stop, float step)

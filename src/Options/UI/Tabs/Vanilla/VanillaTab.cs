@@ -13,7 +13,7 @@ public abstract class VanillaTab: IGameOptionTab
     protected readonly StandardLogger log = LoggerFactory.GetLogger<StandardLogger>(typeof(VanillaTab));
     protected UnityOptional<RoleSettingsTabButton> TabButton = UnityOptional<RoleSettingsTabButton>.Null();
     protected UnityOptional<RolesSettingsMenu> RelatedMenu = UnityOptional<RolesSettingsMenu>.Null();
-    protected RoleRulesCategory roleCategory;
+    protected RoleRulesCategory roleCategory = null!;
 
     private OrderedSet<GameOption> options = new();
     private readonly List<Action<IGameOptionTab>> callbacks = new();
@@ -42,6 +42,8 @@ public abstract class VanillaTab: IGameOptionTab
     // Ignores this when looking for options
     public bool Ignore() => true;
 
+    public Optional<Color[]> HeaderColors() => Optional<Color[]>.Null();
+
     public void AddEventListener(Action<IGameOptionTab> callback) => callbacks.Add(callback);
 
     public void AddOption(GameOption option)
@@ -57,7 +59,9 @@ public abstract class VanillaTab: IGameOptionTab
         callbacks.ForEach(cb => cb(this));
     }
 
-    public abstract StringOption InitializeOption(StringOption sourceBehavior);
+    public Transform OptionParent() => throw new NotImplementedException("VanillaTab.OptionParent is not supposed to be called.");
+
+    public abstract OptionBehaviour InitializeOption(OptionBehaviour sourceBehavior);
 
     public abstract void Setup(RolesSettingsMenu menu);
 

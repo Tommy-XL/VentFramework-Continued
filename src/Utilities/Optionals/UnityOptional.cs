@@ -9,6 +9,8 @@ public class UnityOptional<T> : Optional<T> where T: Object
 
     public UnityOptional(T? item) : base(item) { }
 
+    public UnityOptional(UnityOptional<T> optional) : base(optional) { }
+
     public new static UnityOptional<T> Of(T? item)
     {
         return new UnityOptional<T>(item);

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
+using VentLib.Logging.Default;
 using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Harmony.Attributes;
 
@@ -13,6 +14,7 @@ internal static class AddChatPatch
     internal static void Prefix(ChatController __instance, PlayerControl sourcePlayer, string chatText)
     {
         if (!AmongUsClient.Instance.AmHost) return;
+        chatText = chatText.Trim(); // Trim spaces from chatText
         if (!chatText.StartsWith("/")) return;
         if (sourcePlayer.IsHost()) return;
         CommandRunner.Instance.Execute(new CommandContext(sourcePlayer, chatText[1..]));
@@ -22,6 +24,7 @@ internal static class AddChatPatch
     internal static void HostCommandCheck(PlayerControl __instance, string chatText)
     {
         if (!AmongUsClient.Instance.AmHost) return;
+        chatText = chatText.Trim(); // Trim spaces from chatText
         if (!chatText.StartsWith("/")) return;
         if (!__instance.IsHost()) return;
         CommandRunner.Instance.Execute(new CommandContext(__instance, chatText[1..]));

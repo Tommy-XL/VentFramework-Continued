@@ -7,6 +7,7 @@ using AmongUs.GameOptions;
 using VentLib.Options.Extensions;
 using LibCpp2IL;
 using VentLib.Utilities.Extensions;
+using VentLib.Options.UI.Controllers;
 
 namespace VentLib.Options.Patches;
 
@@ -27,31 +28,19 @@ public static class CheckForSetHeaderPatch
 [HarmonyPatch(typeof(ToggleOption), nameof(ToggleOption.Initialize))]
 public static class CancelToggleOptionInitializePatch
 {
-    public static bool Prefix(ToggleOption __instance)
-    {
-        if (__instance.boolOptionName != BoolOptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(ToggleOption __instance) => __instance.boolOptionName != BoolOptionNames.Invalid;
 }
 
 [HarmonyPatch(typeof(StringOption), nameof(StringOption.Initialize))]
 public static class CancelStringOptionInitializePatch
 {
-    public static bool Prefix(StringOption __instance)
-    {
-        if (__instance.stringOptionName != Int32OptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(StringOption __instance) => __instance.stringOptionName != Int32OptionNames.Invalid;
 }
 
 [HarmonyPatch(typeof(NumberOption), nameof(NumberOption.Initialize))]
 public static class CancelNumberOptionInitializePatch
 {
-    public static bool Prefix(NumberOption __instance)
-    {
-        if (__instance.floatOptionName != FloatOptionNames.Invalid || __instance.intOptionName != Int32OptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(NumberOption __instance) => __instance.floatOptionName != FloatOptionNames.Invalid || __instance.intOptionName != Int32OptionNames.Invalid;
 }
 
 // PlayerOption does not have an Initialize so uhh...
@@ -73,38 +62,29 @@ public static class CancelPlayerEnablePatch
 [HarmonyPatch(typeof(ToggleOption), nameof(ToggleOption.UpdateValue))]
 public static class CancelToggleOptionUpdateePatch
 {
-    public static bool Prefix(ToggleOption __instance)
-    {
-        if (__instance.boolOptionName != BoolOptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(ToggleOption __instance) => __instance.boolOptionName != BoolOptionNames.Invalid;
 }
 
 [HarmonyPatch(typeof(StringOption), nameof(StringOption.FixedUpdate))]
 public static class CancelStringOptionUpdatePatch
 {
-    public static bool Prefix(StringOption __instance)
-    {
-        return __instance.stringOptionName != Int32OptionNames.Invalid;
-    }
+    public static bool Prefix(StringOption __instance) => __instance.stringOptionName != Int32OptionNames.Invalid;
 }
 
 [HarmonyPatch(typeof(NumberOption), nameof(NumberOption.UpdateValue))]
 public static class CancelNumberOptionUpdatePatch
 {
-    public static bool Prefix(NumberOption __instance)
-    {
-        if (__instance.floatOptionName != FloatOptionNames.Invalid || __instance.intOptionName != Int32OptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(NumberOption __instance) => __instance.floatOptionName != FloatOptionNames.Invalid || __instance.intOptionName != Int32OptionNames.Invalid;
 }
 
 [HarmonyPatch(typeof(PlayerOption), nameof(PlayerOption.UpdateValue))]
 public static class CancelPlayerOptionUpdatePatch
 {
-    public static bool Prefix(PlayerOption __instance)
-    {
-        if (__instance.optionName != Int32OptionNames.Invalid) return true;
-        return false;
-    }
+    public static bool Prefix(PlayerOption __instance) => __instance.optionName != Int32OptionNames.Invalid;
+}
+
+[HarmonyPatch(typeof(RoleOptionSetting), nameof(RoleOptionSetting.UpdateValuesAndText))]
+public static class CancelRoleOptionSettingUpdateValuesAndText
+{
+    public static bool Prefix(RoleOptionSetting __instance) => !RoleOptionController.Enabled;
 }

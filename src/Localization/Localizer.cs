@@ -21,7 +21,7 @@ public class Localizer
 
     public Dictionary<string, Language> Languages { get; }
     public LocalizerSettings Settings { get; } = new();
-    public string CurrentLanguage = LanguageSetPatch.CurrentLanguage;
+    public string CurrentLanguage { get; internal set; } = LanguageSetPatch.CurrentLanguage;
     
     private Dictionary<string, string> cachedTranslations = new();
     

@@ -32,80 +32,95 @@ internal class ArgumentAccumulator : ILogAccumulator
             switch (c)
             {
                 case '}':
-                {
-                    int argNum = nArgs;
-                    bool setArgNum = false;
-                
-                    if (stack.Count == 0) FormatException();
-                    string stackValue = stack.Pop();
-                    if (stackValue == "\\")
                     {
-                        builder.Append(c);
+                        if (stack.Count == 0) FormatException(c, "Unmatched closing brace.");
+                        string stackValue = stack.Pop();
+
+                        if (stackValue == "\\")
+                        {
+                            // Append the backslash followed by the closing brace
+                            builder.Append('\\').Append(c);
+                            continue;
+                        }
+
+                        if (!int.TryParse(stackValue, out int argNum))
+                        {
+                            FormatException(c, $"Invalid placeholder index '{stackValue}'.");
+                            break;
+                        }
+
+                        if (stack.Count == 0 || stack.Pop() != "{") FormatException(c, "Expected opening brace before closing brace.");
+
+                        if (argNum >= arguments.Arguments.Length)
+                        {
+                            throw new FormatException($"Not enough arguments provided for index {argNum}. (Total={arguments.Arguments.Length})");
+                        }
+
+                        builder.Append(arguments.Arguments[argNum]);
                         continue;
                     }
-
-                    if (int.TryParse(stackValue, out int i))
-                    {
-                        argNum = i;
-                        setArgNum = true;
-                        stackValue = stack.Pop();
-                    }
-                    else nArgs++;
-                
-                    if (stackValue != "{") FormatException();
-                    if (argNum >= arguments.Arguments.Length)
-                    {
-                        throw new FormatException(setArgNum
-                            ? $"Not enough arguments provided for indexer of {argNum} (Total={arguments.Arguments.Length})"
-                            : $"Not enough arguments provided. (Expected = {argNum}, Total = {arguments.Arguments.Length})");
-                    }
-
-                    builder.Append(arguments.Arguments[argNum]);
-                    continue;
-                }
-                case '{' when stack.Count == 0:
-                    stack.Push("{");
-                    continue;
-                case '{' when stack.Peek() == "\\":
-                    stack.Pop();
-                    continue;
                 case '{':
-                    FormatException();
-                    break;
+                    if (stack.Count == 0 || stack.Peek() != "\\")
+                    {
+                        stack.Push("{");
+                        continue;
+                    }
+                    stack.Pop(); // Handle escaped '{'
+                    builder.Append('\\').Append(c);
+                    continue;
                 case '\\':
+                    if (stack.Count > 0 && stack.Peek() == "\\")
+                    {
+                        // Double backslash -> Append one backslash
+                        stack.Pop();
+                        builder.Append('\\');
+                        continue;
+                    }
                     stack.Push("\\");
                     continue;
-            }
-
-            if (stack.Count == 0)
-            {
-                builder.Append(c);
-                continue;
-            }
-
-            string peek = stack.Peek();
-            if (!((peek == "{" || IsNumeric(peek)) && char.IsDigit(c))) 
-                FormatException();
-            
-            if (IsNumeric(peek)) stack.Push(peek + c);
-            else stack.Push(c.ToString());
-
-            continue;
-
-            void FormatException()
-            {
-                ThrowFormatException(c.ToString(), pos, initialString);
+                default:
+                    if (stack.Count > 0)
+                    {
+                        string peek = stack.Peek();
+                        if (peek == "{" && char.IsDigit(c))
+                        {
+                            stack.Push(stack.Pop() + c); // Building placeholder index
+                        }
+                        else if (peek == "{" || IsNumeric(peek))
+                        {
+                            FormatException(c, $"Invalid character '{c}' inside argument placeholder.");
+                        }
+                        else if (peek == "\\")
+                        {
+                            stack.Pop(); // Append the backslash followed by the character
+                            builder.Append('\\').Append(c);
+                        }
+                        else
+                        {
+                            builder.Append(c); // Add literal '{' or other characters
+                        }
+                    }
+                    else
+                    {
+                        builder.Append(c); // Normal character
+                    }
+                    break;
             }
         }
 
         return composite.SetMessage(builder.ToString());
+
+        void FormatException(char currentChar, string msg = "Invalid format string.")
+        {
+            ThrowFormatException($"{msg} ('{currentChar}')", pos, initialString);
+        }
     }
-    
+
     private static bool IsNumeric(string s)
     {
         foreach (char c in s)
         {
-            if (!char.IsDigit(c) && c != '.')
+            if (!char.IsDigit(c))
             {
                 return false;
             }
@@ -113,20 +128,9 @@ internal class ArgumentAccumulator : ILogAccumulator
 
         return true;
     }
-    
+
     private static void ThrowFormatException(string str, int position, string sourceString)
     {
-        throw str switch
-        {
-            "\\" => Exc("Illegal Escape Character"),
-            "{" => Exc("Invalid Opening Brace"),
-            "}" => Exc("Invalid Closing Brace"),
-            _ => Exc($"Invalid Syntax ({str})")
-        };
-
-        Exception Exc(string msg) => new FormatException($"{msg} at Position {position} of String \"{sourceString}\"");
+        throw new FormatException($"{str} at Position {position} of String \"{sourceString}\"");
     }
-
-
-
 }

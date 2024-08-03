@@ -3,6 +3,7 @@ using HarmonyLib;
 using VentLib.Logging;
 using VentLib.Networking.RPC.Patches;
 using VentLib.Version;
+using VentLib.Version.BuiltIn;
 
 namespace VentLib.Networking.Handshake.Patches;
 

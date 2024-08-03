@@ -32,7 +32,7 @@ public partial class Vents : BasePlugin
     public static readonly uint[] BuiltinRPCs = Enum.GetValues<VentCall>().Select(rpc => (uint)rpc).ToArray();
     internal static VersionControl VersionControl { get; } = new();
     public static CommandRunner CommandRunner = new();
-    
+
     internal static Assembly RootAssemby = null!;
     internal static Harmony Harmony = new(Id);
     internal static readonly Dictionary<uint, List<ModRPC>> RpcBindings = new();
@@ -40,9 +40,8 @@ public partial class Vents : BasePlugin
     internal static readonly Dictionary<Assembly, string> AssemblyNames = new();
     internal static readonly Dictionary<Assembly, int[]?> BlockedReceivers = new();
     internal static readonly Dictionary<uint, PlayerControl> LastSenders = new();
-    
-    private static bool _initialized;
 
+    private static bool _initialized;
     static Vents()
     {
         BepInExLogListener.BindToUnity();
@@ -65,7 +64,7 @@ public partial class Vents : BasePlugin
 
         return RPCs.FirstOrDefault(v => targetMethod == null || v.TargetMethod.Equals(targetMethod));
     }
-    
+
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static ModRPC? FindRPC(uint callId, Type declaringClass, string methodName, Type[]? parameters = null)
     {
@@ -89,7 +88,7 @@ public partial class Vents : BasePlugin
         if (RegisteredAssemblies.ContainsKey(assembly)) return false;
         RegisteredAssemblies.Add(assembly, VentControlFlag.AllowedReceiver | VentControlFlag.AllowedSender);
         AssemblyNames.TryAdd(assembly, assembly.GetName().Name!);
-        
+
         RegisterInIl2CppAttribute.Register(assembly);
 
 
@@ -116,7 +115,7 @@ public partial class Vents : BasePlugin
 
             RpcManager.Register(new ModRPC(attribute, method));
         }
-        
+
         if (localize) Localizer.Localizers.Values.ForEach(locale =>
         {
             locale.Languages.Values.Where(lang => lang.Updated).ForEach(lang => lang.Dump(locale.Serializer));
@@ -131,7 +130,7 @@ public partial class Vents : BasePlugin
         MainThreadAnchor.IsMainThread();
 
         NoDepLogger.High($"Initializing VentFramework {Assembly.GetExecutingAssembly().GetName().Version!.ToString(4)}");
-        
+
         var _ = Async.AUCWrapper;
         RootAssemby = Assembly.GetCallingAssembly();
         IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly, assembly == RootAssemby);
@@ -140,7 +139,7 @@ public partial class Vents : BasePlugin
         _initialized = true;
         NoDepLogger.High("Sucessfully initialized VentFramework.");
     }
-    
+
     public static void BlockClient(Assembly assembly, int clientId)
     {
         int[] newBlockedArray = BlockedReceivers.TryGetValue(assembly, out int[]? blockedClients)
@@ -153,7 +152,7 @@ public partial class Vents : BasePlugin
     {
         AssemblyNames[assembly] = name;
     }
-    
+
     internal static int[]? CallingAssemblyBlacklist() => BlockedReceivers.GetValueOrDefault(Assembly.GetCallingAssembly());
 
     internal static VentControlFlag CallingAssemblyFlag(Assembly? assembly = null)

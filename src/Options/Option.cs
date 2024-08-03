@@ -176,4 +176,5 @@ public class Option: IRpcSendable<Option>
     }
 
     internal bool HasParent() => Parent.Exists();
+    internal Option GetAncestor() => HasParent() ? Parent.Get().GetAncestor() : this;
 }

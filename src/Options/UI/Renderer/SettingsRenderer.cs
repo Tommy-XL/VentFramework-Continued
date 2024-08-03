@@ -17,12 +17,8 @@ public class SettingsRenderer: IGameOptionRenderer
     
     public void SetHeight(float height) => Height = height;
     public float GetHeight() => Height;
-    public void RenderTabs(IGameOptionTab[] tabs)
-    {
-        
-    }
 
-    public void PreRender(GameOption option, RenderOptions renderOptions, GameOptionsMenu menu)
+    public virtual void PreRender(GameOption option, RenderOptions renderOptions, GameOptionsMenu menu)
     {
         bool isTitle = option.IsTitle;
         
@@ -38,20 +34,20 @@ public class SettingsRenderer: IGameOptionRenderer
             Behaviour.transform.FindChild("MinusButton (1)").localPosition += new Vector3(0.3f, 0f, 0f);
             Behaviour.transform.FindChild("PlusButton (1)").localPosition += new Vector3(0.3f, 0f, 0f);
             Behaviour.transform.FindChild("Value_TMP (1)").localPosition += new Vector3(0.3f, 0f, 0f);
-            Behaviour.transform.FindChild("ValueBox").localPosition += new Vector3(0.3f, 0f, 0f);
+            Behaviour.transform.FindChild("ValueBox").gameObject.SetActive(false);
         } else {
-            Behaviour.transform.FindChild("Toggle").localPosition += new Vector3(0.3f, 0f, 0f);
+            Behaviour.transform.FindChild("Toggle").localPosition += new Vector3(1.3f, 0f, 0f);
         }
         Behaviour.transform.FindChild("Title Text").transform.localPosition -= new Vector3(0.15f, 0f, 0f);
         Behaviour.transform.Find("LabelBackground").localPosition += new Vector3(1.75f + (0.4f * (option.Level - 1)), option.Level == 1 ? 0.005f : 0, 0f);
     }
 
     
-    public void Render(GameOption option, (int level, int index) info, RenderOptions renderOptions, GameOptionsMenu menu)
+    public virtual void Render(GameOption option, (int level, int index) info, RenderOptions renderOptions, GameOptionsMenu menu)
     {
         if (option.OptionType == Enum.OptionType.Title)
         {
-            CategoryHeaderMasked categoryHeader = (option as UndefinedOption).Header.Get();
+            CategoryHeaderMasked categoryHeader = (option as UndefinedOption)!.Header.Get();
             categoryHeader.transform.localPosition = new Vector3(-0.903f, Height, -2f);
             categoryHeader.transform.parent = menu.settingsContainer;
             categoryHeader.gameObject.SetActive(SettingsOptionController.ModSettingsOpened);
@@ -68,7 +64,7 @@ public class SettingsRenderer: IGameOptionRenderer
             render.color = Colors[Mathf.Clamp((lvl - 1) % 3, 0, 2)];
             Behaviour.transform.Find("Title Text").transform.localPosition = new Vector3(-0.885f + 0.23f * Mathf.Clamp(lvl - 1, 0, int.MaxValue), 0f);
             //transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(3.4f, 0.37f);
-            render.transform.localPosition = new Vector3(0.1f + 0.11f * (lvl - 1), 0f);
+            // render.transform.localPosition = new Vector3(0.1f + 0.11f * (lvl - 1), 0f);
         }
         float lvlCalculation = (0.2f * lvl);
         render.size = new Vector2(7f - lvlCalculation, 0.55f);
@@ -81,13 +77,13 @@ public class SettingsRenderer: IGameOptionRenderer
         Height -= 0.45f;
     }
 
-    public void PostRender(GameOptionsMenu menu)
+    public virtual void PostRender(GameOptionsMenu menu)
     {
         if (!SettingsOptionController.ModSettingsOpened) return;
-		menu.scrollBar.SetYBoundsMax(-Height - 1.65f);
+        menu.scrollBar.ContentYBounds.max = -Height - 1.65f;
     }
 
-    public void Close()
+    public virtual void Close()
     {
     }
 }

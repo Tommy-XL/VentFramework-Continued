@@ -9,7 +9,6 @@ using VentLib.Utilities.Optionals;
 namespace VentLib.Options.UI.Options;
 public class FloatOption: GameOption
 {
-    private static readonly StandardLogger log = LoggerFactory.GetLogger<StandardLogger>(typeof(FloatOption));
     // a float option uses the string class yes. fight me
     internal UnityOptional<StringOption> Behaviour = new();
 
@@ -19,20 +18,20 @@ public class FloatOption: GameOption
         Children.ForEach(child => {
             switch (child.OptionType) {
                 case OptionType.String:
-                    (child as TextOption).HideMembers();
+                    (child as TextOption)!.HideMembers();
                     break;
                 case OptionType.Bool:
-                    (child as BoolOption).HideMembers();
+                    (child as BoolOption)!.HideMembers();
                     break;
                 case OptionType.Int:
                 case OptionType.Float:
-                    (child as FloatOption).HideMembers();
+                    (child as FloatOption)!.HideMembers();
                     break;
                 case OptionType.Player:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
                 default:
-                    (child as UndefinedOption).HideMembers();
+                    (child as UndefinedOption)!.HideMembers();
                     break;
             }
         });
@@ -80,16 +79,16 @@ public class FloatOption: GameOption
             PassiveButton minusButton = b.transform.FindChild("MinusButton (1)").GetComponent<PassiveButton>();
 
             plusButton.OnClick = new Button.ButtonClickedEvent();
-            plusButton.OnMouseOut = new Button.ButtonClickedEvent();
-            plusButton.OnMouseOver = new Button.ButtonClickedEvent();
+            plusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            plusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             plusButton.OnClick.AddListener((Action)Increment);
             SpriteRenderer plusActiveSprite = plusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
             plusButton.OnMouseOut.AddListener((Action)(() => plusActiveSprite.color = Color.white));
             plusButton.OnMouseOver.AddListener((Action)(() => plusActiveSprite.color = Color.cyan));
 
             minusButton.OnClick = new Button.ButtonClickedEvent();
-            minusButton.OnMouseOut = new Button.ButtonClickedEvent();
-            minusButton.OnMouseOver = new Button.ButtonClickedEvent();
+            minusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            minusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             minusButton.OnClick.AddListener((Action)Decrement);
             SpriteRenderer minusActiveSprite = minusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
             minusButton.OnMouseOut.AddListener((Action)(() => minusActiveSprite.color = Color.white));

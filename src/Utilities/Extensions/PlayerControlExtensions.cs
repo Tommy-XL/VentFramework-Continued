@@ -1,4 +1,5 @@
 using VentLib.Version;
+using VentLib.Version.BuiltIn;
 
 namespace VentLib.Utilities.Extensions;
 

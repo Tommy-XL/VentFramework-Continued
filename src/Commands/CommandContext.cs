@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
+using VentLib.Logging;
+using VentLib.Logging.Default;
+using VentLib.Utilities.Extensions;
 
 namespace VentLib.Commands;
 
@@ -9,17 +13,16 @@ public class CommandContext
     public string OriginalMessage = null!;
     public string? Alias;
     public string[] Args = null!;
-    public List<int> ErroredParameters = null!;
+    // public List<int> ErroredParameters = null!;
 
     internal PlayerControl Source = null!;
     
     internal CommandContext(PlayerControl source, string message)
     {
         OriginalMessage = message;
-        string[] split = message.Split(" ");
-        Alias = split[0];
+        string[] split = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        Alias = split.Length > 0 ? split[0] : string.Empty;
         Args = split.Length > 1 ? split[1..] : Array.Empty<string>();
-        ErroredParameters = new List<int>();
         Source = source;
     }
 
@@ -27,14 +30,14 @@ public class CommandContext
     {
     }
 
-    internal CommandContext Subcommand()
+    internal CommandContext Subcommand(int subCommandIndex)
     {
         return new CommandContext
         {
             OriginalMessage = OriginalMessage,
-            Alias = Args.Length > 0 ? Args[0] : null!,
+            Alias = Args.Length > 0 ? Args[0] : string.Empty,
             Args = Args.Length > 1  ? Args[1..] : Array.Empty<string>(),
-            ErroredParameters = new List<int>(),
+            // ErroredParameters = new List<int>(),
             Source = Source
         };
     }

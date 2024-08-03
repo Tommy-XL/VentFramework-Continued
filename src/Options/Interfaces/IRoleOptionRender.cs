@@ -1,3 +1,4 @@
+using UnityEngine;
 using VentLib.Options.UI;
 using VentLib.Options.UI.Options;
 
@@ -17,7 +18,11 @@ public interface IRoleOptionRender
 
     float GetHeight();
 
-    float GetOptionCount();
+    float GetChancesHeight();
 
     void Close();
+
+    Color[] GetColorsFromName(string name);
+
+    bool IsColorBright(Color color);
 }
