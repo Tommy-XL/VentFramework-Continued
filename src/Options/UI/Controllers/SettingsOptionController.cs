@@ -160,11 +160,6 @@ public static class SettingsOptionController
 
     internal static void ValidateOptionBehaviour(GameOption option, GameOptionsMenu menu, bool preRender = true)
     {
-        // if (option.Setup) 
-        // {
-        //     return;
-        // }
-        // option.Setup = true;
         if (option.BehaviourExists()) return;
         switch (option.OptionType) 
         {

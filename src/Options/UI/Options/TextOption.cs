@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VentLib.Options.Enum;
 using VentLib.Options.Events;
+using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Optionals;
 
 namespace VentLib.Options.UI.Options;
@@ -74,14 +75,14 @@ public class TextOption: GameOption
     internal void BindPlusMinusButtons()
     {
         Behaviour.IfPresent(b => {
-            PassiveButton plusButton = b.transform.FindChild("PlusButton (1)").GetComponent<PassiveButton>();
-            PassiveButton minusButton = b.transform.FindChild("MinusButton (1)").GetComponent<PassiveButton>();
+            PassiveButton plusButton = b.FindChild<PassiveButton>("PlusButton");
+            PassiveButton minusButton = b.FindChild<PassiveButton>("MinusButton");
 
             plusButton.OnClick = new Button.ButtonClickedEvent();
             plusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
             plusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             plusButton.OnClick.AddListener((Action)Increment);
-            SpriteRenderer plusActiveSprite = plusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer plusActiveSprite = plusButton.FindChild<SpriteRenderer>("ButtonSprite");
             plusButton.OnMouseOut.AddListener((Action)(() => plusActiveSprite.color = Color.white));
             plusButton.OnMouseOver.AddListener((Action)(() => plusActiveSprite.color = Color.cyan));
 
@@ -89,7 +90,7 @@ public class TextOption: GameOption
             minusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
             minusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             minusButton.OnClick.AddListener((Action)Decrement);
-            SpriteRenderer minusActiveSprite = minusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer minusActiveSprite = minusButton.FindChild<SpriteRenderer>("ButtonSprite");
             minusButton.OnMouseOut.AddListener((Action)(() => minusActiveSprite.color = Color.white));
             minusButton.OnMouseOver.AddListener((Action)(() => minusActiveSprite.color = Color.cyan));
         });

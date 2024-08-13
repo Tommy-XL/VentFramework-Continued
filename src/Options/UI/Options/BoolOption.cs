@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VentLib.Options.Enum;
 using VentLib.Options.Events;
+using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Optionals;
 
 namespace VentLib.Options.UI.Options;
@@ -53,12 +54,12 @@ public class BoolOption: GameOption
     internal void BindPlusMinusButtons()
     {
         Behaviour.IfPresent(b => {
-            PassiveButton button = b.gameObject.transform.FindChild("Toggle").GetComponent<PassiveButton>();
+            PassiveButton button = b.FindChild<PassiveButton>("Toggle");
             button.OnClick = new Button.ButtonClickedEvent();
             button.OnMouseOut = new UnityEngine.Events.UnityEvent();
             button.OnMouseOver = new UnityEngine.Events.UnityEvent();
             button.OnClick.AddListener((Action)Increment);
-            SpriteRenderer activeSprite = button.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer activeSprite = button.FindChild<SpriteRenderer>("InactiveSprite");
             button.OnMouseOut.AddListener((Action)(() => activeSprite.color = Color.white));
             button.OnMouseOver.AddListener((Action)(() => activeSprite.color = Color.cyan));
             Value.Map(v => v.Value).IfPresent(v => b.CheckMark.enabled = (bool)v);

@@ -79,12 +79,26 @@ public static class UnityObjectExtensions
 
     public static T FindChild<T>(this MonoBehaviour obj, string name, bool includeInactive = false) where T: Object
     {
-        return obj.GetComponentsInChildren<T>(includeInactive).First(c => c.name == name);
+        if (name.Contains("/"))
+        {
+            Transform target = obj.transform.Find(name);
+
+            if (!target.gameObject.activeSelf && !includeInactive) return null!;
+            else return target.GetComponent<T>();
+        }
+        else return obj.GetComponentsInChildren<T>(includeInactive).First(c => c.name == name);
     }
 
     public static T FindChild<T>(this GameObject obj, string name, bool includeInactive = false) where T: Object
     {
-        return obj.GetComponentsInChildren<T>(includeInactive).First(c => c.name == name);
+        if (name.Contains("/"))
+        {
+            Transform target = obj.transform.Find(name);
+
+            if (!target.gameObject.activeSelf && !includeInactive) return null!;
+            else return target.GetComponent<T>();
+        }
+        else return obj.GetComponentsInChildren<T>(includeInactive).First(c => c.name == name);
     }
     
     public static UnityOptional<T> FindChildOrEmpty<T>(this MonoBehaviour obj, string name, bool includeInactive = false) where T: Object

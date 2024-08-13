@@ -16,7 +16,6 @@ internal class ArgumentAccumulator : ILogAccumulator
         builder.EnsureCapacity(initialString.Length + arguments.Arguments.Length * 8);
         
         Stack<string> stack = new();
-        int nArgs = 0;
         int pos = 0;
 
         while (true)

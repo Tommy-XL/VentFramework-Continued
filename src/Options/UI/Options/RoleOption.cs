@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VentLib.Options.Enum;
 using VentLib.Options.Events;
 using VentLib.src.Options.UI;
+using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Optionals;
 
 namespace VentLib.Options.UI.Options;
@@ -81,16 +83,16 @@ public class RoleOption: GameOption
     internal void BindPlusMinusButtons()
     {
         Behaviour.IfPresent(b => {
-            if (Children.Find(child => child.Name() == "Maximum") != null) {
+            if (Children.FirstOrDefault(child => child!.Name() == "Maximum", null) != null) {
                 MaximumOption = (Children.Find(child => child.Name() == "Maximum") as FloatOption)!;
-                PassiveButton plusButtonNumber = b.transform.FindChild("Role #/PlusButton (1)").GetComponent<PassiveButton>();
-                PassiveButton minusButtonNumber = b.transform.FindChild("Role #/MinusButton (1)").GetComponent<PassiveButton>();
+                PassiveButton plusButtonNumber = b.FindChild<PassiveButton>("Role #/PlusButton");
+                PassiveButton minusButtonNumber = b.FindChild<PassiveButton>("Role #/MinusButton");
 
                 plusButtonNumber.OnClick = new Button.ButtonClickedEvent();
                 plusButtonNumber.OnMouseOut = new UnityEngine.Events.UnityEvent();
                 plusButtonNumber.OnMouseOver = new UnityEngine.Events.UnityEvent();
                 plusButtonNumber.OnClick.AddListener((Action)IncrementRoleCount);
-                SpriteRenderer plusActiveSpriteNumber = plusButtonNumber.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+                SpriteRenderer plusActiveSpriteNumber = plusButtonNumber.FindChild<SpriteRenderer>("ButtonSprite");
                 plusButtonNumber.OnMouseOut.AddListener((Action)(() => plusActiveSpriteNumber.color = Color.white));
                 plusButtonNumber.OnMouseOver.AddListener((Action)(() => plusActiveSpriteNumber.color = Color.cyan));
 
@@ -98,7 +100,7 @@ public class RoleOption: GameOption
                 minusButtonNumber.OnMouseOut = new UnityEngine.Events.UnityEvent();
                 minusButtonNumber.OnMouseOver = new UnityEngine.Events.UnityEvent();
                 minusButtonNumber.OnClick.AddListener((Action)DecrementRoleCount);
-                SpriteRenderer minusActiveSpriteNumber = minusButtonNumber.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+                SpriteRenderer minusActiveSpriteNumber = minusButtonNumber.FindChild<SpriteRenderer>("ButtonSprite");
                 minusButtonNumber.OnMouseOut.AddListener((Action)(() => minusActiveSpriteNumber.color = Color.white));
                 minusButtonNumber.OnMouseOver.AddListener((Action)(() => minusActiveSpriteNumber.color = Color.cyan));
                 b.countText.text = MaximumOption.GetValueText();
@@ -106,14 +108,14 @@ public class RoleOption: GameOption
                 b.transform.FindChild("Role #").gameObject.SetActive(false);
             }
             PercentageOption = (Children.Find(child => child.Name() == "Percentage") as FloatOption)!;
-            PassiveButton plusButton = b.transform.FindChild("Chance %/PlusButton (1)").GetComponent<PassiveButton>();
-            PassiveButton minusButton = b.transform.FindChild("Chance %/MinusButton (1)").GetComponent<PassiveButton>();
+            PassiveButton plusButton = b.FindChild<PassiveButton>("Chance %/PlusButton");
+            PassiveButton minusButton = b.FindChild<PassiveButton>("Chance %/MinusButton");
 
             plusButton.OnClick = new Button.ButtonClickedEvent();
             plusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
             plusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             plusButton.OnClick.AddListener((Action)IncrementChance);
-            SpriteRenderer plusActiveSprite = plusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer plusActiveSprite = plusButton.FindChild<SpriteRenderer>("ButtonSprite");
             plusButton.OnMouseOut.AddListener((Action)(() => plusActiveSprite.color = Color.white));
             plusButton.OnMouseOver.AddListener((Action)(() => plusActiveSprite.color = Color.cyan));
 
@@ -121,7 +123,7 @@ public class RoleOption: GameOption
             minusButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
             minusButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             minusButton.OnClick.AddListener((Action)DecrementChance);
-            SpriteRenderer minusActiveSprite = minusButton.gameObject.transform.FindChild("InactiveSprite").gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer minusActiveSprite = minusButton.FindChild<SpriteRenderer>("ButtonSprite");
             minusButton.OnMouseOut.AddListener((Action)(() => minusActiveSprite.color = Color.white));
             minusButton.OnMouseOver.AddListener((Action)(() => minusActiveSprite.color = Color.cyan));
             // b.chanceText.text = PercentageOption.GetValueText();

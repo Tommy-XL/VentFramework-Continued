@@ -31,9 +31,9 @@ public class SettingsRenderer: IGameOptionRenderer
         // Behaviour.transform.FindChild("Title Text").GetComponent<RectTransform>().sizeDelta = new Vector2(3.5f, 0.37f);
         
         if (option.OptionType != Enum.OptionType.Bool) {
-            Behaviour.transform.FindChild("MinusButton (1)").localPosition += new Vector3(0.3f, 0f, 0f);
-            Behaviour.transform.FindChild("PlusButton (1)").localPosition += new Vector3(0.3f, 0f, 0f);
             Behaviour.transform.FindChild("Value_TMP (1)").localPosition += new Vector3(0.3f, 0f, 0f);
+            Behaviour.transform.FindChild("MinusButton").localPosition += new Vector3(0.3f, 0f, 0f);
+            Behaviour.transform.FindChild("PlusButton").localPosition += new Vector3(0.3f, 0f, 0f);
             Behaviour.transform.FindChild("ValueBox").gameObject.SetActive(false);
         } else {
             Behaviour.transform.FindChild("Toggle").localPosition += new Vector3(1.3f, 0f, 0f);
