@@ -4,7 +4,7 @@ using UnityEngine;
 using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Optionals;
 
-namespace VentLib.src.Options.UI;
+namespace VentLib.Options.UI;
 
 class RoleOptionIntializer
 {

@@ -4,7 +4,8 @@ using VentLib.Options.UI.Controllers;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using VentLib.Utilities.Optionals;
 using VentLib.Utilities.Extensions;
-using VentLib.src.Options.UI;
+using VentLib.Options.UI;
+using VentLib.Options.UI.Controllers.Search;
 
 namespace VentLib.Options.Patches;
 
@@ -21,6 +22,7 @@ internal static class OpenGameSettingsPatch
     internal static void Postfix(GameSettingMenu __instance)
     {
         SettingsOptionController.Start(__instance);
+        SearchBarController.HandleOpen(__instance);
     }
 }
 

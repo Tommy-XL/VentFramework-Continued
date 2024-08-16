@@ -3,10 +3,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VentLib.Options.Enum;
-using VentLib.Options.Events;
-using VentLib.src.Options.UI;
-using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Optionals;
+using VentLib.Utilities.Extensions;
 
 namespace VentLib.Options.UI.Options;
 public class RoleOption: GameOption

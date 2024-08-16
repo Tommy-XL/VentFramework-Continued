@@ -27,6 +27,42 @@ public static class AssemblyUtils
         return surfaceTypes.SelectMany(GetTypes).Concat(surfaceTypes).ToArray();
     }
 
+    public static string GetRootNamespace(Assembly assembly)
+    {
+        var types = assembly.GetTypes();
+
+        var namespaces = types
+            .Select(t => t.Namespace ?? "")
+            .Distinct()
+            .Where(ns => !string.IsNullOrEmpty(ns))
+            .ToList();
+
+        if (namespaces.Count == 0)
+            return string.Empty;
+
+        var commonPrefix = namespaces
+            .Aggregate((current, next) => GetCommonPrefix(current, next));
+
+        return commonPrefix;
+
+        string GetCommonPrefix(string str1, string str2)
+        {
+            int minLength = Math.Min(str1.Length, str2.Length);
+            int lastDot = -1;
+
+            for (int i = 0; i < minLength; i++)
+            {
+                if (str1[i] != str2[i])
+                    break;
+
+                if (str1[i] == '.')
+                    lastDot = i;
+            }
+
+            return lastDot == -1 ? string.Empty : str1.Substring(0, lastDot);
+        }
+    }
+
     internal static string GetAssemblyRefName(Assembly assembly)
     {
         return assembly == Vents.RootAssemby ? "root" : Vents.AssemblyNames.GetValueOrDefault(assembly, assembly.GetName().Name!);

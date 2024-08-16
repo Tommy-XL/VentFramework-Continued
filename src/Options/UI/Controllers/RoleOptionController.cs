@@ -1,12 +1,12 @@
-using TMPro;
 using System;
 using System.Linq;
 using UnityEngine;
 using VentLib.Logging;
-using VentLib.Utilities;
 using AmongUs.GameOptions;
 using VentLib.Options.Enum;
+using VentLib.Options.Events;
 using VentLib.Options.UI.Tabs;
+using System.Collections.Generic;
 using VentLib.Options.Interfaces;
 using VentLib.Options.Extensions;
 using VentLib.Options.UI.Options;
@@ -15,11 +15,8 @@ using VentLib.Utilities.Optionals;
 using VentLib.Utilities.Attributes;
 using VentLib.Utilities.Extensions;
 using VentLib.Utilities.Collections;
-using VentLib.Options.UI;
-using VentLib.Options.Events;
 using VentLib.Options.UI.Tabs.Vanilla;
-using System.Collections.Generic;
-using VentLib.src.Options.UI;
+using VentLib.Options.UI.Controllers.Search;
 
 namespace VentLib.Options.UI.Controllers;
 
@@ -163,7 +160,7 @@ public static class RoleOptionController
             }
         });
         _renderer.SetHeight(-0.1f);
-        CurrentTab.PreRender().ForEach((option, index) => RenderCheck(option, index, menu));
+        CurrentTab.PreRender().Where(o => o.name.ToLower().Contains(SearchBarController.CurrentText)).ForEach((option, index) => RenderCheck(option, index, menu));
         _renderer.PostRender(menu);
     }
 

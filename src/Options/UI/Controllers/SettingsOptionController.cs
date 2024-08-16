@@ -14,6 +14,7 @@ using VentLib.Options.UI.Renderer;
 using VentLib.Utilities.Optionals;
 using VentLib.Utilities.Attributes;
 using VentLib.Utilities.Extensions;
+using VentLib.Options.UI.Controllers.Search;
 
 namespace VentLib.Options.UI.Controllers;
 
@@ -154,7 +155,7 @@ public static class SettingsOptionController
             }
         });
         OptionRenderer.SetHeight(MainSettingsTab.StartHeight());
-        MainSettingsTab.PreRender().ForEach((option, index) => RenderCheck(option, index, menu));
+        MainSettingsTab.PreRender().Where(o => o.name.ToLower().Contains(SearchBarController.CurrentText)).ForEach((option, index) => RenderCheck(option, index, menu));
         OptionRenderer.PostRender(menu);
     }
 
