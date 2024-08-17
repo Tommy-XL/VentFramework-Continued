@@ -8,7 +8,7 @@
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/music-discussion/VentFramework-Continued/</RepositoryUrl>
-        <AmongUs>D:\Games\AmongUs\steam\Lotus</AmongUs>
+        <!--<AmongUs>D:\Games\AmongUs\steam\Lotus</AmongUs>-->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
